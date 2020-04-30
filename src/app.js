@@ -107,13 +107,22 @@ app.post("/repositories/:id/like", (request, response) => {
       (repository) => repository.id === id
     );
 
-    if (repositoryIndex > 0) {
+    const repositoryFound = repositories.find(
+      (repository) => repository.id === id
+    );
+
+    if (repositoryIndex < 0) {
       throw new Error("Project not found");
     }
 
-    repositories[repositoryIndex].likes += 1;
+    const repository = {
+      ...repositoryFound,
+      likes: repositoryFound.likes + 1,
+    };
 
-    response.status(200).json(repositories[repositoryIndex]);
+    repositories[repositoryIndex] = repository;
+
+    response.status(200).json(repository);
   } catch (error) {
     return response.status(400).json({ error: error.message });
   }
